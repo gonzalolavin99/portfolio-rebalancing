@@ -97,5 +97,5 @@ cash buy the $305 AAPL is missing.
 
 ## AI usage
 
-This solution was designed and written with Claude (Claude Code). Conversation:
-_[link to the conversation]_
+This solution was designed and written with Claude (Claude Code). The full
+conversation is in [docs/ai-conversation.md](docs/ai-conversation.md).
