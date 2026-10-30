@@ -255,7 +255,7 @@ Con eso, impleméntalo en esta estructura: portfolio/models.py, porfolio/prices.
 
 Implementé las dos correcciones: tenías razón en ambas. Los 17 tests pasan.
 
-Archivos: [models.py](portfolio/models.py), [prices.py](portfolio/prices.py), [test_rebalance.py](tests/test_rebalance.py) y [pyproject.toml](pyproject.toml). Escribí `portfolio/prices.py` asumiendo que "porfolio" era un typo.
+Archivos: [models.py](../portfolio/models.py), [prices.py](../portfolio/prices.py), [test_rebalance.py](../tests/test_rebalance.py) y [pyproject.toml](../pyproject.toml). Escribí `portfolio/prices.py` asumiendo que "porfolio" era un typo.
 
 **Cómo quedaron tus correcciones**
 - **Orden umbral → redondeo → ajuste de caja.** El ajuste corre sobre los montos ya redondeados, así que lo que reportan las órdenes es lo que se verifica.
@@ -305,9 +305,9 @@ Hice los tres ajustes, el README y los commits. Los 21 tests pasan dentro del `.
 
 **2. Rechazo de floats.** Pesos, cantidades y cash deben ser `Decimal`. Si no, se lanza un `TypeError` que explica por qué: los floats no representan dinero con exactitud y hay que usar `Decimal('0.1')`. La cantidad se valida en `Holding.__post_init__`, porque es donde vive. También rechaza `int`: basta con exigir `Decimal` y no hubo que hacer excepciones. El test está parametrizado para los tres casos.
 
-**3. Entorno virtual.** Desinstalé del Python global el pytest que había instalado antes. Ahora todo se instala en `.venv` con `pip install -e ".[dev]"`. El [.gitignore](.gitignore) excluye `.venv/`, los caches y `*.egg-info/`, la carpeta que genera la instalación editable.
+**3. Entorno virtual.** Desinstalé del Python global el pytest que había instalado antes. Ahora todo se instala en `.venv` con `pip install -e ".[dev]"`. El [.gitignore](../.gitignore) excluye `.venv/`, los caches y `*.egg-info/`, la carpeta que genera la instalación editable.
 
-**README.** Está en [README.md](README.md). La salida del ejemplo es real, la obtuve al correrlo, e incluye una liquidación de TSLA y cash invertido. Tiene los supuestos, el algoritmo paso a paso, las decisiones de diseño con su por qué, lo que quedó fuera de alcance y la sección "AI usage" con el placeholder del link.
+**README.** Está en [README.md](../README.md). La salida del ejemplo es real, la obtuve al correrlo, e incluye una liquidación de TSLA y cash invertido. Tiene los supuestos, el algoritmo paso a paso, las decisiones de diseño con su por qué, lo que quedó fuera de alcance y la sección "AI usage" con el placeholder del link.
 
 **Commits en `main`:**
 ```
@@ -335,6 +335,33 @@ Exporta esta conversación completa (mis mensajes y tus respuestas, sin los resu
 Listo, en dos commits:
 
 - `ddf7dbe` **Reject non-Decimal prices from the price source.** `Stock.current_price` valida con `_require_decimal` antes de chequear que el precio sea positivo. El test de precios inválidos pasó a `test_invalid_price_is_rejected`, con un caso `float` que espera `TypeError` además de los casos `missing` y `zero`. Los 22 tests pasan.
-- **Add AI conversation export and link it from the README.** [docs/ai-conversation.md](docs/ai-conversation.md) sale del export de la sesión de Claude Code: tus mensajes y mis respuestas en orden, sin tool calls ni sus resultados, y sin mi razonamiento interno. La sección "AI usage" del README ahora enlaza a ese archivo con una ruta relativa.
+- **Add AI conversation export and link it from the README.** [docs/ai-conversation.md](ai-conversation.md) sale del export de la sesión de Claude Code: tus mensajes y mis respuestas en orden, sin tool calls ni sus resultados, y sin mi razonamiento interno. La sección "AI usage" del README ahora enlaza a ese archivo con una ruta relativa.
 
 Este último mensaje lo agregué a mano al final del archivo, porque el export se generó antes de que terminara de escribirlo.
+
+---
+
+## User
+
+Revisé el repo en GitHub y hay links rotos en `docs/ai-conversation.md`: como el archivo está dentro de `docs/`, los links relativos de tus respuestas (por ejemplo `portfolio/models.py`) apuntan a `docs/portfolio/models.py` y dan 404. Corrige solo las rutas, sin tocar el texto de la conversación:
+
+* `](portfolio/` → `](../portfolio/`
+* `](tests/` → `](../tests/`
+* `](pyproject.toml)` → `](../pyproject.toml)`
+* `](.gitignore)` → `](../.gitignore)`
+* `](README.md)` → `](../README.md)`
+* `](docs/ai-conversation.md)` → `](ai-conversation.md)`
+
+Verifica que no quede ningún otro link relativo roto en ese archivo.
+Luego agrega al final de `docs/ai-conversation.md` este mensaje mío y tu respuesta, para que el export quede completo.
+Haz un commit con el mensaje “Fix relative links in AI conversation export” y un `git push`.
+Por último, si tienes la CLI `gh` instalada y autenticada, agrega esta descripción al repo: `gh repo edit --description "Portfolio rebalancing module in Python — Fintual take-home"`. Si no está disponible, avísame y la pongo a mano.
+
+---
+
+## Claude
+
+Corregí los links, agregué este intercambio al archivo, hice el commit "Fix relative links in AI conversation export" y el push a `origin/main`. También dejé puesta la descripción del repo.
+
+- **Links:** apliqué los seis reemplazos solo a las rutas; el texto no cambió. Después revisé todos los links relativos del archivo: quedan siete (`../.gitignore`, `../README.md`, `../portfolio/models.py`, `../portfolio/prices.py`, `../pyproject.toml`, `../tests/test_rebalance.py` y `ai-conversation.md`) y todos apuntan a archivos que existen. No hay otros rotos.
+- **Descripción:** `gh` está instalado y autenticado. Corrí `gh repo edit` y comprobé con `gh repo view` que la descripción quedó puesta.
