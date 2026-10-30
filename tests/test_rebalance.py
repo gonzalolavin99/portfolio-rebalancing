@@ -201,9 +201,17 @@ def test_floats_are_rejected(build):
         build()
 
 
-@pytest.mark.parametrize("source", [prices(), prices(META="0")], ids=["missing", "zero"])
-def test_unavailable_price_is_rejected(source):
+@pytest.mark.parametrize(
+    "source, error",
+    [
+        (prices(), PriceUnavailableError),
+        (prices(META="0"), PriceUnavailableError),
+        (StaticPriceSource({"META": 100.0}), TypeError),
+    ],
+    ids=["missing", "zero", "float"],
+)
+def test_invalid_price_is_rejected(source, error):
     portfolio = Portfolio((holding("META", "1"),), allocation(META="1"))
 
-    with pytest.raises(PriceUnavailableError):
+    with pytest.raises(error):
         portfolio.rebalance(source)

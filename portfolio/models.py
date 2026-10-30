@@ -57,6 +57,7 @@ class Stock:
         # The source is received instead of stored, so a single rebalance can
         # never mix prices coming from two different feeds.
         price = prices.current_price(self.ticker)
+        _require_decimal(f"Price of {self.ticker}", price)
         if price <= 0:
             raise PriceUnavailableError(f"Invalid price for {self.ticker}: {price}")
         return price
